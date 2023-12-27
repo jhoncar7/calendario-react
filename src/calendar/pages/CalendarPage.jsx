@@ -10,11 +10,13 @@ import { useState } from 'react';
 import { CalendarModal } from '../components/calendarModal';
 import { useUiStore } from '../../hooks/useUiStore';
 import { useCalendarStore } from '../../hooks/useCalendarStore';
+import { FavAddNew } from '../components/FavAddNew';
+import { FavDelete } from '../components/FavDelete';
 
 
 export const CalendarPage = () => {
 
-    const {events} = useCalendarStore();
+    const { events, setActiveEvent, hasEventSelected } = useCalendarStore();
     const { openDateModal } = useUiStore();
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
 
@@ -40,6 +42,7 @@ export const CalendarPage = () => {
 
     const onSelect = (event) => {
         console.log({ click: event });
+        setActiveEvent(event)
     }
 
     const onViewChange = (event) => {
@@ -71,6 +74,12 @@ export const CalendarPage = () => {
             />
 
             <CalendarModal />
+
+            <FavAddNew />
+            {
+                hasEventSelected && <FavDelete />
+            }
+
         </>
     )
 }
