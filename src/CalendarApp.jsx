@@ -5,6 +5,9 @@ import { store } from "./store/store"
 
 
 export const CalendarApp = () => {
+
+    console.log(process.env.NODE_ENV);
+    
     return (
         <Provider store={store}>
             <BrowserRouter>

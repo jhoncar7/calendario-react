@@ -7,5 +7,6 @@ export const store = configureStore({
     reducer: {
         ui: uiSlice.reducer,
         calendar: calendarSlice.reducer,
-    }
+    },
+    devTools: process.env.NODE_ENV !== 'production',
 });
