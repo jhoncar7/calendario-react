@@ -6,25 +6,28 @@ import { Navbar } from '../components/Navbar';
 import { localizer } from '../../helpers/calendarLocalizer';
 import { getMessagesES } from '../../helpers/getMessages';
 import { CalendarEvent } from '../components/CalendarEvent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CalendarModal } from '../components/calendarModal';
 import { useUiStore } from '../../hooks/useUiStore';
 import { useCalendarStore } from '../../hooks/useCalendarStore';
 import { FavAddNew } from '../components/FavAddNew';
 import { FavDelete } from '../components/FavDelete';
+import { useAuthStore } from '../../hooks/useAuthStore';
 
 
 export const CalendarPage = () => {
 
-    const { events, setActiveEvent, hasEventSelected } = useCalendarStore();
+    const { user } = useAuthStore();
+    const { events, setActiveEvent, hasEventSelected, startLoadingEvents } = useCalendarStore();
     const { openDateModal } = useUiStore();
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
 
     const eventStyleGetter = (event, start, end, isSelected) => {
         // console.log({ event, start, end, isSelected });
 
+        const isMyEvent = (user.uid === event.user._id) || (user.uid === event.user.uid);
         const style = {
-            backgroundColor: '#347CF7',
+            backgroundColor: isMyEvent ? '#347CF7' : '#465660',
             borderRadius: '0px',
             color: 'white',
             opacity: 0.8
@@ -49,6 +52,11 @@ export const CalendarPage = () => {
         // console.log({ viewChange: event });
         localStorage.setItem('lastView', event)
     }
+
+    useEffect(() => {
+        startLoadingEvents();
+    }, [])
+
 
     return (
         <>
