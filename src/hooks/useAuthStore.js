@@ -51,14 +51,19 @@ export const useAuthStore = () => {
                         if (errors.hasOwnProperty(field)) {
                             const errorDetails = errors[field];
                             console.error(`Error en ${field}: ${errorDetails.msg}`);
+                            dispatch(onLogout(`Error en ${field}: ${errorDetails.msg}` || '--'));
                         }
                     }
-                } else
+                } else{
                     console.error('Error desconocido en la respuesta, hable con un administrador');
-            } else
+                    dispatch(onLogout('Error desconocido en la respuesta, hable con un administrador'));
+                }
+            } else{
                 console.error('Error en la solicitud');
+                dispatch(onLogout('Error en la solicitud'));
+            }
 
-            dispatch(onLogout(error.response?.data?.msg || '--'));
+            
 
             setTimeout(() => {
                 dispatch(clearErrorMessage());
