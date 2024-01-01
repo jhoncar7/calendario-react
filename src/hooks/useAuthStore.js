@@ -38,8 +38,27 @@ export const useAuthStore = () => {
             localStorage.setItem('token-init-date', new Date().getTime());
             dispatch(onLogin({ name: data.name, uid: data.uid }));
         } catch (error) {
+            // Supongamos que error es el objeto de error que recibiste
             console.log({ error });
-            dispatch(onLogout(error.response.data?.msg || '--'));
+
+            if (error.response) {
+                const responseData = error.response.data;
+
+                if (responseData && responseData.errors) {
+                    const errors = responseData.errors;
+
+                    for (const field in errors) {
+                        if (errors.hasOwnProperty(field)) {
+                            const errorDetails = errors[field];
+                            console.error(`Error en ${field}: ${errorDetails.msg}`);
+                        }
+                    }
+                } else
+                    console.error('Error desconocido en la respuesta, hable con un administrador');
+            } else
+                console.error('Error en la solicitud');
+
+            dispatch(onLogout(error.response?.data?.msg || '--'));
 
             setTimeout(() => {
                 dispatch(clearErrorMessage());
